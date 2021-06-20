@@ -1,60 +1,45 @@
 package com.tidal.interview.tidal.data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
+@Entity
 public class PlaylistTrack implements Comparable<PlaylistTrack> {
 
-    private Integer id;
-    private Playlist playlist;
-    private int index;
+/*
+    PLAYLIST_ID VARCHAR(50) NOT NULL,
+    TRACK_ID INT(8) NOT NULL,
+    TRACK_INDEX INT(3) NOT NULL,
+    DATE_ADDED DATE NOT NULL*/
+
+    @Id
+    private String playlistID;
+
+    private int trackIndex;
     private Date dateAdded;
     private int trackId;
 
-    private Track track;
-
-    public PlaylistTrack() {
-        dateAdded = new Date();
+    @Override
+    public int compareTo(PlaylistTrack o) {
+        return 0;
     }
 
-    public Integer getId() {
-        return id;
+    public String getPlaylistID() {
+        return playlistID;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPlaylistID(String playlistID) {
+        this.playlistID = playlistID;
     }
 
-    public int getTrackId() {
-        return trackId;
+    public int getTrackIndex() {
+        return trackIndex;
     }
 
-    public void setTrackId(int trackId) {
-        this.trackId = trackId;
-    }
-
-    public Playlist getPlaylist() {
-        return playlist;
-    }
-
-    public void setPlaylist(Playlist playlist) {
-        this.playlist = playlist;
-    }
-
-    public Track getTrack() {
-        return track;
-    }
-
-    public void setTrack(Track track) {
-        this.track = track;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
+    public void setTrackIndex(int trackIndex) {
+        this.trackIndex = trackIndex;
     }
 
     public Date getDateAdded() {
@@ -65,34 +50,11 @@ public class PlaylistTrack implements Comparable<PlaylistTrack> {
         this.dateAdded = dateAdded;
     }
 
-    public int compareTo(PlaylistTrack o) {
-        return this.getIndex() - o.getIndex();
+    public int getTrackId() {
+        return trackId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PlaylistTrack that = (PlaylistTrack) o;
-
-        if (index != that.index) return false;
-        if (trackId != that.trackId) return false;
-        if (dateAdded != null ? !dateAdded.equals(that.dateAdded) : that.dateAdded != null) return false;
-        return !(id != null ? !id.equals(that.id) : that.id != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + index;
-        result = 31 * result + (dateAdded != null ? dateAdded.hashCode() : 0);
-        result = 31 * result + trackId;
-        return result;
-    }
-
-    public String toString() {
-        return "PlaylistTrack id[" + getId() + "], trackId[" + getTrackId() + "]";
+    public void setTrackId(int trackId) {
+        this.trackId = trackId;
     }
 }

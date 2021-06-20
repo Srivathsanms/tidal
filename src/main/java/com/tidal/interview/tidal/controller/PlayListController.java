@@ -4,6 +4,7 @@ package com.tidal.interview.tidal.controller;
 import com.tidal.interview.tidal.data.Playlist;
 import com.tidal.interview.tidal.data.Track;
 import com.tidal.interview.tidal.services.PlaylistService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 public class PlayListController {
 
-
+    @Autowired
     PlaylistService service;
 
     @PostMapping(value = "/create/{accountId}", produces ={MediaType.APPLICATION_JSON_VALUE} )
@@ -29,7 +30,7 @@ public class PlayListController {
         return new ResponseEntity<>("Account Created", OK);
     }
 
-    @GetMapping(value = "/account/{accountId}/balance",produces ={MediaType.APPLICATION_JSON_VALUE} )
+    @GetMapping(value = "/account",produces ={MediaType.APPLICATION_JSON_VALUE} )
     @ResponseBody
     public void getPlayList(){
         List<Track> trackList = new ArrayList<Track>();

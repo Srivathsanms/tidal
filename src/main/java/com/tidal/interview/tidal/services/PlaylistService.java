@@ -5,6 +5,8 @@ import com.tidal.interview.tidal.data.PlaylistTrack;
 import com.tidal.interview.tidal.data.Track;
 import com.tidal.interview.tidal.exception.PlaylistException;
 import com.tidal.interview.tidal.interfaces.PlaylistRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
@@ -13,14 +15,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+@Service
 public class PlaylistService {
 
-    private PlaylistRepository playlistRepository;
+    @Autowired
+    public PlaylistRepository playlistRepository;
 
-    public PlaylistService(PlaylistRepository playlistRepository){
+   /* public PlaylistService(PlaylistRepository playlistRepository){
         this.playlistRepository = playlistRepository;
-    }
-
+    }*/
     /**
      * Add tracks to the index
      */

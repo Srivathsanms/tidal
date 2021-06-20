@@ -3,8 +3,10 @@ package com.tidal.interview.tidal.data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "TRACKS")
 public class Track {
 
     private String title;

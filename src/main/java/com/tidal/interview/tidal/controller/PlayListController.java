@@ -36,15 +36,15 @@ public class PlayListController {
         List<Track> trackList = new ArrayList<Track>();
         Track track = new Track();
         track.setArtistId(5);
-        track.setTitle("A brand new track");
-        track.setId(76868);
+        track.setTitle("Track 13");
+        track.setTrackID(760);
         Track track1 = new Track();
         track1.setArtistId(4);
-        track1.setTitle("A brand new track");
-        track1.setId(7000);
+        track1.setTitle("Track 18");
+        track1.setTrackID(700);
 
         trackList.add(track);
         trackList.add(track1);
-    service.addTracks("111232131",trackList,2);
+        service.addTracks("111232131",trackList,2);
     }
 }

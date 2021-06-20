@@ -2,10 +2,12 @@ package com.tidal.interview.tidal.data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@Table(name="PLAYLIST_AND_TRACK")
 public class PlaylistTrack implements Comparable<PlaylistTrack> {
 
 /*

@@ -31,7 +31,7 @@ public class PlaylistService {
 
         try {
 
-            Playlist playList = playlistRepository.getPlaylistByUUID(uuid).get();
+            Playlist playList = playlistRepository.findById(uuid).get();
 
             //We do not allow > 500 tracks in new playlists
             if (playList.getNrOfTracks() + tracksToAdd.size() > 500) {
@@ -64,12 +64,12 @@ public class PlaylistService {
             for (Track track : tracksToAdd) {
                 System.out.println("Track : " + track);
                 PlaylistTrack playlistTrack = new PlaylistTrack();
-                playlistTrack.setTrack(track);
-                playlistTrack.setPlaylist(playList);
+                //playlistTrack.setTrack(track);
+                //playlistTrack.setPlaylist(playList);
                 playlistTrack.setDateAdded(new Date());
-                playlistTrack.setTrack(track);
+               // playlistTrack.setTrack(track);
 
-                playlistTrack.setTrackId(track.getId());
+                playlistTrack.setTrackId(track.getTrackID());
                 //TODO: Not required duration can be fetched from TRACK table using trackID
                 playList.setDuration(addTrackDurationToPlaylist(playList, track));
                 original.add(toIndex, playlistTrack);
@@ -81,7 +81,7 @@ public class PlaylistService {
 //
             int i = 0;
             for (PlaylistTrack track : original) {
-                track.setIndex(i++);
+                track.setTrackIndex(i++);
             }
 
             playList.getPlaylistTracks().clear();

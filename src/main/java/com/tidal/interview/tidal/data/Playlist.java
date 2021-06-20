@@ -2,10 +2,7 @@ package com.tidal.interview.tidal.data;
 
 import sun.reflect.generics.tree.Tree;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.*;
 
 
@@ -23,8 +20,9 @@ public class Playlist {
     Registered_date DATE NOT NULL,
     Deleted NUMERIC (1) DEFAULT 0*/
     @Id
-    private String uuid;
+    private String id;
     private String playlistName;
+    @OneToMany(targetEntity = PlaylistTrack.class)
     private Set<PlaylistTrack> playlistTracks = new TreeSet<PlaylistTrack>();
     private Date registeredDate;
     private Date lastUpdatedDate;
@@ -35,7 +33,7 @@ public class Playlist {
     private Float duration;
 
     public Playlist() {
-        this.uuid = UUID.randomUUID().toString();
+        this.id = UUID.randomUUID().toString();
         Date d = new Date();
         this.registeredDate = d;
         this.lastUpdatedDate = d;
@@ -50,12 +48,12 @@ public class Playlist {
         this.duration = duration;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getPlaylistName() {

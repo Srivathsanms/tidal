@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +27,9 @@ public class PlayListController {
         return new ResponseEntity<>("Account Created", OK);
     }
 
-    @GetMapping(value = "/account",produces ={MediaType.APPLICATION_JSON_VALUE} )
+    @GetMapping(value = "/account/{uuid}/index/{index}",produces ={MediaType.APPLICATION_JSON_VALUE} )
     @ResponseBody
-    public void getPlayList(){
+    public void getPlayList(@PathVariable("uuid") String uuid, @PathVariable("index") int index){
         List<Track> trackList = new ArrayList<Track>();
         Track track = new Track();
         track.setArtistId(5);
@@ -45,6 +42,6 @@ public class PlayListController {
 
         trackList.add(track);
         trackList.add(track1);
-        service.addTracks("111232131",trackList,2);
+        service.addTracks(uuid,trackList,index);
     }
 }

@@ -9,11 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PlaylistService {
@@ -40,54 +36,58 @@ public class PlaylistService {
 
             // The index is out of bounds, put it in the end of the list.
             int size = playList.getPlaylistTracks() == null ? 0 : playList.getPlaylistTracks().size();
-            if (toIndex > size || toIndex == -1) {
+            if (toIndex > size || toIndex < 0) {
                 toIndex = size;
-                System.out.println("to Index : " + toIndex);
-                System.out.println("No of Tracks : " + playList.getNrOfTracks());
             }
 
+           /* //Dont think this validation is needed, Since -1 is allowed assuming that any negative value should be allowed and set in the last index position
             if (!validateIndexes(toIndex, playList.getNrOfTracks())) {
-                return Collections.EMPTY_LIST;
-            }
+                return Collections.emptyList();
+            }*/
 
             Set<PlaylistTrack> originalSet = playList.getPlaylistTracks();
-            List<PlaylistTrack> original;
-            if (originalSet == null || originalSet.size() == 0)
-                original = new ArrayList<PlaylistTrack>();
+            List<PlaylistTrack> originalList;
+            if (originalSet == null || originalSet.isEmpty())
+                originalList = new LinkedList<PlaylistTrack>();
             else
-                original = new ArrayList<PlaylistTrack>(originalSet);
-
-            Collections.sort(original);
+                originalList = new LinkedList<PlaylistTrack>(originalSet);
+//NOT Needed
+            //Collections.sort(originalList);
 
             List<PlaylistTrack> added = new ArrayList<PlaylistTrack>(tracksToAdd.size());
-
+            Set<Track> tracksToAddFinal = new HashSet<>();
+            List<Integer> x = new LinkedList<>();
+            for(PlaylistTrack t : originalList){
+                x.add(t.getTrackId());
+            }
             for (Track track : tracksToAdd) {
-                System.out.println("Track : " + track);
-                PlaylistTrack playlistTrack = new PlaylistTrack();
-                //playlistTrack.setTrack(track);
-                //playlistTrack.setPlaylist(playList);
-                playlistTrack.setDateAdded(new Date());
-               // playlistTrack.setTrack(track);
+                if(!(x.contains(track.getTrackID()))){
+                    tracksToAddFinal.add(track);
+                }
+                }
 
-                playlistTrack.setTrackId(track.getTrackID());
+            for(Track finalTracks : tracksToAddFinal){
+                PlaylistTrack playlistTrack = new PlaylistTrack();
+                playlistTrack.setPlaylistID(playList.getId());
+                playlistTrack.setPlaylist(playList);
+                playlistTrack.setDateAdded(new Date());
+                playlistTrack.setTrackId(finalTracks.getTrackID());
                 //TODO: Not required duration can be fetched from TRACK table using trackID
-                playList.setDuration(addTrackDurationToPlaylist(playList, track));
-                original.add(toIndex, playlistTrack);
+                playList.setDuration(addTrackDurationToPlaylist(playList, finalTracks));
+                originalList.add(toIndex, playlistTrack);
                 added.add(playlistTrack);
-                System.out.println("Original :::" + original);
-                System.out.println("playListTracks :::" + playlistTrack);
                 toIndex++;
             }
 //
             int i = 0;
-            for (PlaylistTrack track : original) {
+            for (PlaylistTrack track : originalList) {
                 track.setTrackIndex(i++);
             }
 
             playList.getPlaylistTracks().clear();
-            playList.getPlaylistTracks().addAll(original);
-            playList.setNrOfTracks(original.size());
-
+            playList.getPlaylistTracks().addAll(originalList);
+            playList.setNrOfTracks(originalList.size());
+            playlistRepository.save(playList);
             return added;
 
         } catch (Exception e) {
@@ -109,9 +109,9 @@ public class PlaylistService {
 		return Collections.EMPTY_LIST;
 	}
 
-    private boolean validateIndexes(int toIndex, int length) {
+    /*private boolean validateIndexes(int toIndex, int length) {
         return toIndex >= 0 && toIndex <= length;
-    }
+    }*/
 
     private float addTrackDurationToPlaylist(Playlist playList, Track track) {
         return (track != null ? track.getDuration() : 0)

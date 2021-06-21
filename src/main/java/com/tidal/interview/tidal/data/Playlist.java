@@ -20,9 +20,11 @@ public class Playlist {
     Registered_date DATE NOT NULL,
     Deleted NUMERIC (1) DEFAULT 0*/
     @Id
+    @Column(name = "ID")
     private String id;
     private String playlistName;
-    @OneToMany(targetEntity = PlaylistTrack.class)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "PLAYLISTID", referencedColumnName = "ID", updatable = false, insertable = false, nullable = false)
     private Set<PlaylistTrack> playlistTracks = new TreeSet<PlaylistTrack>();
     private Date registeredDate;
     private Date lastUpdatedDate;

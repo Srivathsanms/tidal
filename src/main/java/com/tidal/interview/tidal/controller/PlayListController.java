@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -43,5 +44,13 @@ public class PlayListController {
         trackList.add(track);
         trackList.add(track1);
         service.addTracks(uuid,trackList,index);
+    }
+    @GetMapping(value = "/remove/{uuid}",produces ={MediaType.APPLICATION_JSON_VALUE} )
+    @ResponseBody
+    public void removePlayList(@PathVariable("uuid") String uuid){
+        List<Integer> i = new LinkedList<>();
+        i.add(1);
+        i.add(2);
+        service.removeTracks(uuid, i);
     }
 }

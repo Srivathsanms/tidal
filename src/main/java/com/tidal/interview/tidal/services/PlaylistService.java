@@ -9,7 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.*;
+
+import static java.util.Objects.isNull;
 
 @Service
 public class PlaylistService {
@@ -17,12 +22,15 @@ public class PlaylistService {
     @Autowired
     public PlaylistRepository playlistRepository;
 
+    @PersistenceContext
+    EntityManager entityManager;
    /* public PlaylistService(PlaylistRepository playlistRepository){
         this.playlistRepository = playlistRepository;
     }*/
     /**
      * Add tracks to the index
      */
+    @Transactional
     public List<PlaylistTrack> addTracks(String uuid, List<Track> tracksToAdd, int toIndex) throws PlaylistException {
 
         try {
@@ -61,10 +69,10 @@ public class PlaylistService {
                 x.add(t.getTrackId());
             }
             for (Track track : tracksToAdd) {
-                if(!(x.contains(track.getTrackID()))){
+                if (!(x.contains(track.getTrackID()))) {
                     tracksToAddFinal.add(track);
                 }
-                }
+            }
 
             for(Track finalTracks : tracksToAddFinal){
                 PlaylistTrack playlistTrack = new PlaylistTrack();
@@ -79,10 +87,7 @@ public class PlaylistService {
                 toIndex++;
             }
 //
-            int i = 0;
-            for (PlaylistTrack track : originalList) {
-                track.setTrackIndex(i++);
-            }
+            setIndexesOnPlayListTrack(originalList);
 
             playList.getPlaylistTracks().clear();
             playList.getPlaylistTracks().addAll(originalList);
@@ -90,12 +95,25 @@ public class PlaylistService {
             playlistRepository.save(playList);
             return added;
 
-        } catch (Exception e) {
+        }
+        catch(NoSuchElementException nseException) {
+            nseException.printStackTrace();
+            throw new PlaylistException("Playlist does not exists");
+        }
+
+        catch (Exception e) {
             e.printStackTrace();
             throw new PlaylistException("Generic error");
         }
     }
-    
+
+    private void setIndexesOnPlayListTrack(List<PlaylistTrack> originalList) {
+        int i = 0;
+        for (PlaylistTrack track : originalList) {
+            track.setTrackIndex(i++);
+        }
+    }
+
     /**
      * Remove the tracks from the playlist located at the sent indexes
      *
@@ -104,9 +122,25 @@ public class PlaylistService {
      * @return the tracks in the playlist after the removal
      * @throws PlaylistException
      */
+    @Transactional
 	public List<PlaylistTrack> removeTracks(String uuid, List<Integer> indexes) throws PlaylistException {
+
 		// TODO
-		return Collections.EMPTY_LIST;
+        Playlist playList = playlistRepository.findById(uuid).get();
+        List<PlaylistTrack> removePlaylist = new ArrayList<>(playList.getPlaylistTracks());
+        Collections.sort(removePlaylist);
+
+        for(int i : indexes) {
+            removePlaylist.removeIf(track -> i == track.getTrackIndex());
+            System.out.println("Index Removed :::" + i);
+        }
+        setPlaylistTracks(playList,removePlaylist);
+
+        System.out.println("Remove PlayList ::::" + removePlaylist);
+        /*playList.getPlaylistTracks().clear();
+        playList.getPlaylistTracks().addAll(removePlaylist);
+        playlistRepository.save(playList);*/
+		return removePlaylist;
 	}
 
     /*private boolean validateIndexes(int toIndex, int length) {
@@ -116,5 +150,18 @@ public class PlaylistService {
     private float addTrackDurationToPlaylist(Playlist playList, Track track) {
         return (track != null ? track.getDuration() : 0)
                 + (playList != null && playList.getDuration() != null ? playList.getDuration() : 0);
+    }
+
+    private void setPlaylistTracks(Playlist playList, List<PlaylistTrack> original) {
+
+        int i = 0;
+        for (PlaylistTrack track : original) {
+            track.setTrackIndex(i++);
+        }
+
+        playList.getPlaylistTracks().clear();
+        playList.getPlaylistTracks().addAll(original);
+        playList.setNrOfTracks(original.size());
+        entityManager.persist(playList);
     }
 }

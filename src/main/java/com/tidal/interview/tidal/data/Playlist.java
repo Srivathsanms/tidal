@@ -23,7 +23,7 @@ public class Playlist {
     @Column(name = "ID")
     private String id;
     private String playlistName;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "PLAYLISTID", referencedColumnName = "ID", updatable = false, insertable = false, nullable = false)
     private Set<PlaylistTrack> playlistTracks = new TreeSet<PlaylistTrack>();
     private Date registeredDate;

@@ -18,7 +18,7 @@ public class PlaylistTrack implements Comparable<PlaylistTrack> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int Id;
     private String playlistID;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.PERSIST)
     @MapsId("PLAYLISTID")
     @JoinColumn(name = "PLAYLISTID", updatable = false, insertable = false, nullable = false, referencedColumnName = "ID")
     private Playlist playlist;

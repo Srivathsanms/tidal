@@ -4,16 +4,16 @@ package com.tidal.interview.tidal.data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
-@Entity
-@Table(name = "TRACK")
-public class Track {
+
+public class Track implements Serializable {
 
     private String title;
     private float duration;
 
     private int artistId;
-    @Id
+
     private int trackId;
 
     public Track() {

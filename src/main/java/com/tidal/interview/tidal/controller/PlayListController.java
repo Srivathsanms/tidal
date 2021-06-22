@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.*;
 
 @RestController
 public class PlayListController {
@@ -20,28 +21,26 @@ public class PlayListController {
     @Autowired
     PlaylistService service;
 
-    @PostMapping(value = "/create/{accountId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/create/{accountId}", produces = {APPLICATION_JSON_VALUE})
     public ResponseEntity<String> addToplaylist() {
 
         return new ResponseEntity<>("Account Created", OK);
     }
 
     //TODO: should be POST call???
-    @PostMapping(value = "/add/{uuid}/index/{index}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    public ResponseEntity<String> addPlayList(@PathVariable("uuid") String uuid, @PathVariable("index") int index) {
-        List<Track> trackList = getTracks();
+    @PostMapping(value = "/add/{uuid}/index/{index}", produces = {APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> addPlayList(@PathVariable("uuid") String uuid, @PathVariable("index") int index, @RequestBody List<Track> trackList) {
+        /*List<Track> trackList = getTracks();*/
         service.addTracks(uuid, trackList, index);
         return new ResponseEntity<>("Tracks Added", OK);
     }
 
-    @GetMapping(value = "/remove/{uuid}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseBody
-    public void removePlayList(@PathVariable("uuid") String uuid) {
+    @PostMapping(value = "/remove/{uuid}", produces = {APPLICATION_JSON_VALUE},consumes = {APPLICATION_JSON_VALUE})
+    public void removePlayList(@PathVariable("uuid") String uuid, @RequestBody List<Integer> indexes) {
         List<Integer> indixes = new LinkedList<>();
         indixes.add(1);
         indixes.add(2);
-        service.removeTracks(uuid, indixes);
+        service.removeTracks(uuid, indexes);
     }
 
     private List<Track> getTracks() {
@@ -62,5 +61,14 @@ public class PlayListController {
         trackList.add(track);
         trackList.add(track1);
         return trackList;
+    }
+
+
+    @PostMapping(value = "/track", produces = {APPLICATION_JSON_VALUE},consumes = {APPLICATION_JSON_VALUE})
+    public void getTracks(@RequestBody List<Track> track){
+
+        for(Track t : track){
+            System.out.println("Track ID :::::" + t.getTrackId());
+        }
     }
 }

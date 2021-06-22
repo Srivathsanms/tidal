@@ -8,13 +8,10 @@ import com.tidal.interview.tidal.interfaces.PlaylistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.*;
-
-import static java.util.Objects.isNull;
 
 @Service
 public class PlaylistService {
@@ -24,9 +21,6 @@ public class PlaylistService {
 
     @PersistenceContext
     EntityManager entityManager;
-   /* public PlaylistService(PlaylistRepository playlistRepository){
-        this.playlistRepository = playlistRepository;
-    }*/
     /**
      * Add tracks to the index
      */
@@ -39,7 +33,7 @@ public class PlaylistService {
 
             //We do not allow > 500 tracks in new playlists
             if (playList.getNrOfTracks() + tracksToAdd.size() > 500) {
-                throw new PlaylistException("Playlist cannot have more than " + 500 + " tracks");
+                throw new PlaylistException("Playlist cannot have more than 500 tracks");
             }
 
             // The index is out of bounds, put it in the end of the list.
@@ -69,17 +63,17 @@ public class PlaylistService {
                 x.add(t.getTrackId());
             }
             for (Track track : tracksToAdd) {
-                if (!(x.contains(track.getTrackID()))) {
+                if (!(x.contains(track.getTrackId()))) {
                     tracksToAddFinal.add(track);
                 }
             }
 
             for(Track finalTracks : tracksToAddFinal){
                 PlaylistTrack playlistTrack = new PlaylistTrack();
-                playlistTrack.setPlaylistID(playList.getId());
+                playlistTrack.setPlaylistId(playList.getId());
                 playlistTrack.setPlaylist(playList);
                 playlistTrack.setDateAdded(new Date());
-                playlistTrack.setTrackId(finalTracks.getTrackID());
+                playlistTrack.setTrackId(finalTracks.getTrackId());
                 //TODO: Not required duration can be fetched from TRACK table using trackID
                 playList.setDuration(addTrackDurationToPlaylist(playList, finalTracks));
                 originalList.add(toIndex, playlistTrack);
@@ -96,6 +90,7 @@ public class PlaylistService {
             return added;
 
         }
+        //catching exception
         catch(NoSuchElementException nseException) {
             nseException.printStackTrace();
             throw new PlaylistException("Playlist does not exists");
@@ -137,9 +132,6 @@ public class PlaylistService {
         setPlaylistTracks(playList,removePlaylist);
 
         System.out.println("Remove PlayList ::::" + removePlaylist);
-        /*playList.getPlaylistTracks().clear();
-        playList.getPlaylistTracks().addAll(removePlaylist);
-        playlistRepository.save(playList);*/
 		return removePlaylist;
 	}
 

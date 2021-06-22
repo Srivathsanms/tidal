@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "TRACKS")
+@Table(name = "TRACK")
 public class Track {
 
     private String title;
@@ -14,7 +14,7 @@ public class Track {
 
     private int artistId;
     @Id
-    private int trackID;
+    private int trackId;
 
     public Track() {
     }
@@ -43,42 +43,11 @@ public class Track {
         this.artistId = artistId;
     }
 
-    public int getTrackID() {
-        return trackID;
+    public int getTrackId() {
+        return trackId;
     }
 
-    public void setTrackID(int trackID) {
-        this.trackID = trackID;
+    public void setTrackId(int trackId) {
+        this.trackId = trackId;
     }
-/*public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public float getDuration() {
-        return duration;
-    }
-
-    public void setDuration(float duration) {
-        this.duration = duration;
-    }
-
-    public int getArtistId() {
-        return artistId;
-    }
-
-    public void setArtistId(int artistId) {
-        this.artistId = artistId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }*/
 }

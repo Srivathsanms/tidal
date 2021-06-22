@@ -1,11 +1,9 @@
 package com.tidal.interview.tidal.controller;
 
 
-import com.tidal.interview.tidal.data.Playlist;
 import com.tidal.interview.tidal.data.Track;
 import com.tidal.interview.tidal.services.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,35 +20,47 @@ public class PlayListController {
     @Autowired
     PlaylistService service;
 
-    @PostMapping(value = "/create/{accountId}", produces ={MediaType.APPLICATION_JSON_VALUE} )
-    public ResponseEntity<String> addToplaylist(){
+    @PostMapping(value = "/create/{accountId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> addToplaylist() {
 
         return new ResponseEntity<>("Account Created", OK);
     }
 
-    @GetMapping(value = "/account/{uuid}/index/{index}",produces ={MediaType.APPLICATION_JSON_VALUE} )
+    //TODO: should be POST call???
+    @PostMapping(value = "/add/{uuid}/index/{index}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public void getPlayList(@PathVariable("uuid") String uuid, @PathVariable("index") int index){
+    public ResponseEntity<String> addPlayList(@PathVariable("uuid") String uuid, @PathVariable("index") int index) {
+        List<Track> trackList = getTracks();
+        service.addTracks(uuid, trackList, index);
+        return new ResponseEntity<>("Tracks Added", OK);
+    }
+
+    @GetMapping(value = "/remove/{uuid}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    public void removePlayList(@PathVariable("uuid") String uuid) {
+        List<Integer> indixes = new LinkedList<>();
+        indixes.add(1);
+        indixes.add(2);
+        service.removeTracks(uuid, indixes);
+    }
+
+    private List<Track> getTracks() {
         List<Track> trackList = new ArrayList<Track>();
+
         Track track = new Track();
         track.setArtistId(5);
         track.setTitle("Track 13");
-        track.setTrackID(760);
+        track.setTrackId(760);
+        track.setDuration(3.05f);
+
         Track track1 = new Track();
         track1.setArtistId(4);
         track1.setTitle("Track 18");
-        track1.setTrackID(700);
+        track1.setTrackId(700);
+        track1.setDuration(2.55f);
 
         trackList.add(track);
         trackList.add(track1);
-        service.addTracks(uuid,trackList,index);
-    }
-    @GetMapping(value = "/remove/{uuid}",produces ={MediaType.APPLICATION_JSON_VALUE} )
-    @ResponseBody
-    public void removePlayList(@PathVariable("uuid") String uuid){
-        List<Integer> i = new LinkedList<>();
-        i.add(1);
-        i.add(2);
-        service.removeTracks(uuid, i);
+        return trackList;
     }
 }

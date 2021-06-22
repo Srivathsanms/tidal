@@ -37,13 +37,13 @@ public class TidalApplication {
 		PlaylistTrack playlistTrack = new PlaylistTrack();
 		playlistTrack.setPlaylist(playlist);
 		playlistTrack.setTrackIndex(0);
-		playlistTrack.setPlaylistID(playlist.getId());
+		playlistTrack.setPlaylistId(playlist.getId());
 		playlistTrack.setTrackId(200);
 
 		PlaylistTrack playlistTrack1 = new PlaylistTrack();
 		playlistTrack1.setPlaylist(playlist);
 		playlistTrack1.setTrackIndex(1);
-		playlistTrack1.setPlaylistID(playlist.getId());
+		playlistTrack1.setPlaylistId(playlist.getId());
 		playlistTrack1.setTrackId(202);
 
 		playlistTracks.add(playlistTrack);

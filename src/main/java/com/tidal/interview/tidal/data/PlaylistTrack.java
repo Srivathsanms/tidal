@@ -5,22 +5,16 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name="PLAYLIST_AND_TRACK")
+@Table(name = "PLAYLIST_AND_TRACK")
 public class PlaylistTrack implements Comparable<PlaylistTrack> {
-
-/*
-    PLAYLIST_ID VARCHAR(50) NOT NULL,
-    TRACK_ID INT(8) NOT NULL,
-    TRACK_INDEX INT(3) NOT NULL,
-    DATE_ADDED DATE NOT NULL*/
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int Id;
-    private String playlistID;
-    @ManyToOne(cascade=CascadeType.PERSIST)
-    @MapsId("PLAYLISTID")
-    @JoinColumn(name = "PLAYLISTID", updatable = false, insertable = false, nullable = false, referencedColumnName = "ID")
+    private int id;
+    private String playlistId;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @MapsId("playlistId")
+    @JoinColumn(name = "playlistId", updatable = false, insertable = false, nullable = false, referencedColumnName = "id")
     private Playlist playlist;
     private int trackIndex;
     private Date dateAdded;
@@ -28,9 +22,11 @@ public class PlaylistTrack implements Comparable<PlaylistTrack> {
 
     @Transient
     Track track;
-    public PlaylistTrack(){
-    this.dateAdded = new Date();
+
+    public PlaylistTrack() {
+        this.dateAdded = new Date();
     }
+
     public Playlist getPlaylist() {
         return playlist;
     }
@@ -40,40 +36,40 @@ public class PlaylistTrack implements Comparable<PlaylistTrack> {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        id = id;
     }
 
- /*   @Override
+    @Override
     public boolean equals(Object o) {
         PlaylistTrack o1 = (PlaylistTrack) o;
-        if(this.trackId==o1.trackId) return true;
+        if (this.trackId == o1.trackId) return true;
         else return false;
     }
 
     @Override
     public int hashCode() {
-        int result =  0;
+        int result = 0;
         result = 31 * result + trackIndex;
         result = 31 * result + (dateAdded != null ? dateAdded.hashCode() : 0);
         result = 31 * result + trackId;
         return result;
-    }*/
+    }
 
     @Override
     public int compareTo(PlaylistTrack o) {
         return 0;
     }
 
-    public String getPlaylistID() {
-        return playlistID;
+    public String getPlaylistId() {
+        return playlistId;
     }
 
-    public void setPlaylistID(String playlistID) {
-        this.playlistID = playlistID;
+    public void setPlaylistId(String playlistId) {
+        this.playlistId = playlistId;
     }
 
     public int getTrackIndex() {

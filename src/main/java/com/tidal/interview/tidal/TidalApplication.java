@@ -37,6 +37,7 @@ public class TidalApplication {
 		PlaylistTrack playlistTrack = new PlaylistTrack();
 		playlistTrack.setPlaylist(playlist);
 		playlistTrack.setTrackIndex(0);
+		playlistTrack.setDuration(12.0f);
 		playlistTrack.setPlaylistId(playlist.getId());
 		playlistTrack.setTrackId(200);
 
@@ -45,6 +46,7 @@ public class TidalApplication {
 		playlistTrack1.setTrackIndex(1);
 		playlistTrack1.setPlaylistId(playlist.getId());
 		playlistTrack1.setTrackId(202);
+		playlistTrack1.setDuration(13.0f);
 
 		playlistTracks.add(playlistTrack);
 		playlistTracks.add(playlistTrack1);

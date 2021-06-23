@@ -20,9 +20,15 @@ public class PlaylistTrack implements Comparable <PlaylistTrack> {
     private int trackIndex;
     private Date dateAdded;
     private int trackId;
+    private float duration;
 
-    @Transient
-    Track track;
+    public float getDuration() {
+        return duration;
+    }
+
+    public void setDuration(float duration) {
+        this.duration = duration;
+    }
 
     public PlaylistTrack() {
         this.dateAdded = new Date();

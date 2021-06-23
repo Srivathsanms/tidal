@@ -68,6 +68,7 @@ public class PlaylistService {
                 playlistTrack.setPlaylistId(playList.getId());
                 playlistTrack.setPlaylist(playList);
                 playlistTrack.setDateAdded(new Date());
+                playlistTrack.setDuration(finalTracks.getDuration());
                 playlistTrack.setTrackId(finalTracks.getTrackId());
                 playList.setDuration(addTrackDurationToPlaylist(playList, finalTracks));
                 originalList.add(toIndex, playlistTrack);
@@ -109,7 +110,12 @@ public class PlaylistService {
             List < PlaylistTrack > removePlaylist = new ArrayList <>(playList.getPlaylistTracks());
             Collections.sort(removePlaylist);
 
-            indexes.stream().mapToInt(i -> i). < Predicate < ? super PlaylistTrack > >mapToObj(i -> track -> i == track.getTrackIndex()).forEach(removePlaylist::removeIf);
+            for(int i : indexes) {
+                removePlaylist.removeIf(track -> {
+                    playList.setDuration(playList.getDuration()-track.getDuration());
+                    return i == track.getTrackIndex();
+                });
+            }
             setPlaylistTracks(playList, removePlaylist);
             getPlayListAfterRemoval(playListsAfterRemoval, removePlaylist);
 

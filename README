@@ -1,0 +1,57 @@
+This Spring Boot application is for managing addition and removal of Tracks to PlayList
+The application is running on the Port : 8081
+There is a inMemory H2 Database for testing and the console is on the below URL
+URL : http://localhost:8081/h2-console
+Few Sample data are inserted during the start of the application using CommandLineRunner in TidalApplication class
+
+There are 2 different endPoints that are created in the controller
+
+1. To add to existing PlayList
+This end point takes List of tracks, playList Id that is uuid , index at which this list should be added and returns a List of playlist tracks after adding.
+URL : http://localhos:8081/add/{uuid}/index/{index}
+HTTP Call : POST
+Request Param uuid : Can be obtained from the H2 Database
+Request Param index : Any integer value at which the list of tracks should be added
+Request Body Sample :
+[{
+  "title": "Track1",
+  "duration": 12.00,
+  "artistId": 101,
+  "trackId":700302
+},
+{
+  "title": "Track1",
+  "duration": 12.00,
+  "artistId": 101,
+  "trackId":701
+}]
+
+2. To remove track from existing playlist
+This end point takes the index list at which the tracks should be removed, playList ID (uuid).
+It also preserves the existing order for the playlist that are not deleted
+URL : http://localhos:8081/remove/{uuid}
+Request Body : [0,1]
+Request Param : uuid can be obtained from the H2 Database.
+
+General Explanation:
+As per my understanding there is no need of Track Entity or connections between Track and PlayList except that the trackId should be there in the PlayListTrack.
+PlayList has set of PLaylistTrack and PlaylistTrack has trackId for reference to Track.
+I have not created Track table in the database(H2). Since I feel that this is not required for this task.
+I have used ControllerAdvice for exception handling but there is always a room for improvement on this.
+For Simplicity I have used EntityManager to store the values in the database.
+Testcase are covered for the service class and I ran coverage and I could see 85% coverage.
+
+Note : Duplicate Addition of tracks are not allowed, it will preserve its original index.
+We can extend this code to swap tracks from one index to another.
+
+
+How to Run the project
+1. Unzip the file
+2. Navidate to ../../target folder
+3. java -jar tidal.jar
+
+How to Test:
+Use Postman and try to hit the endPoints mentioned.
+
+Please contact me if you are not clear with the code or with the testing
+email :srivathsanrajagopal@gmail.com

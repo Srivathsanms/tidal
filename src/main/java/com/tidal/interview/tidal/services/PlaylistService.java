@@ -112,6 +112,7 @@ public class PlaylistService {
 
             for(int i : indexes) {
                 removePlaylist.removeIf(track -> {
+                    if(i == track.getTrackIndex())
                     playList.setDuration(playList.getDuration()-track.getDuration());
                     return i == track.getTrackIndex();
                 });

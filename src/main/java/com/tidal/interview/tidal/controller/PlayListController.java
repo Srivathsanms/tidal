@@ -20,13 +20,7 @@ public class PlayListController {
     @Autowired
     PlaylistService service;
 
-    @PostMapping(value = "/create/{accountId}", produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> addToplaylist() {
 
-        return new ResponseEntity<>("Account Created", OK);
-    }
-
-    //TODO: should be POST call???
     @PostMapping(value = "/add/{uuid}/index/{index}", produces = {APPLICATION_JSON_VALUE})
     public List<PlayListTrackDto> addPlayList(@PathVariable("uuid") String uuid, @PathVariable("index") int index, @RequestBody List<Track> trackList) {
         return service.addTracks(uuid, trackList, index);
@@ -37,32 +31,4 @@ public class PlayListController {
         return service.removeTracks(uuid, indexes);
     }
 
-    private List<Track> getTracks() {
-        List<Track> trackList = new ArrayList<Track>();
-
-        Track track = new Track();
-        track.setArtistId(5);
-        track.setTitle("Track 13");
-        track.setTrackId(760);
-        track.setDuration(3.05f);
-
-        Track track1 = new Track();
-        track1.setArtistId(4);
-        track1.setTitle("Track 18");
-        track1.setTrackId(700);
-        track1.setDuration(2.55f);
-
-        trackList.add(track);
-        trackList.add(track1);
-        return trackList;
-    }
-
-
-    @PostMapping(value = "/track", produces = {APPLICATION_JSON_VALUE},consumes = {APPLICATION_JSON_VALUE})
-    public void getTracks(@RequestBody List<Track> track){
-
-        for(Track t : track){
-            System.out.println("Track ID :::::" + t.getTrackId());
-        }
-    }
 }

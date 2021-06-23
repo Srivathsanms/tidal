@@ -24,7 +24,7 @@ public class TidalApplication {
 		return args -> {
 			Playlist playlist = new Playlist();
 			playlist.setNrOfTracks(2);
-			playlist.setDuration(12.0f);
+			playlist.setDuration(25.0f);
 			playlist.setDeleted(false);
 			playlist.setPlaylistName("PlayList1");
 			playlist.setPlaylistTracks(getPlayListTracks(playlist));

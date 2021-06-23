@@ -107,15 +107,18 @@ public class PlaylistServiceTest {
 		PlaylistTrack mockPlaylist = new PlaylistTrack();
 		mockPlaylist.setTrackIndex(0);
 		mockPlaylist.setTrackId(2);
+		mockPlaylist.setDuration(12.0f);
 
 		PlaylistTrack mockPlaylist1	 = new PlaylistTrack();
 		mockPlaylist1.setTrackIndex(1);
 		mockPlaylist1.setTrackId(3);
+		mockPlaylist.setDuration(12.0f);
 		playlistTracks.add(mockPlaylist);
 		playlistTracks.add(mockPlaylist1);
 
 		Playlist playlist = new Playlist();
 		playlist.setNrOfTracks(2);
+		playlist.setDuration(24.0f);
 		playlist.setPlaylistTracks(playlistTracks);
 		return playlist;
 	}

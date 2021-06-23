@@ -1,12 +1,13 @@
 package com.tidal.interview.tidal.data;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "PLAYLIST_AND_TRACK")
-public class PlaylistTrack implements Comparable<PlaylistTrack> {
+public class PlaylistTrack implements Comparable <PlaylistTrack> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -43,6 +44,8 @@ public class PlaylistTrack implements Comparable<PlaylistTrack> {
         id = id;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         PlaylistTrack o1 = (PlaylistTrack) o;
@@ -59,10 +62,7 @@ public class PlaylistTrack implements Comparable<PlaylistTrack> {
         return result;
     }
 
-    @Override
-    public int compareTo(PlaylistTrack o) {
-        return 0;
-    }
+
 
     public String getPlaylistId() {
         return playlistId;
@@ -94,5 +94,10 @@ public class PlaylistTrack implements Comparable<PlaylistTrack> {
 
     public void setTrackId(int trackId) {
         this.trackId = trackId;
+    }
+
+    @Override
+    public int compareTo(PlaylistTrack o) {
+       return  this.getTrackIndex() - o.getTrackIndex();
     }
 }

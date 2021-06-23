@@ -54,8 +54,8 @@ public class PlaylistService {
                 originalList = new LinkedList<PlaylistTrack>();
             else
                 originalList = new LinkedList<PlaylistTrack>(originalSet);
-//NOT Needed
-            //Collections.sort(originalList);
+
+            Collections.sort(originalList);
 
             List<PlaylistTrack> added = new ArrayList<PlaylistTrack>(tracksToAdd.size());
             Set<Track> tracksToAddFinal = new HashSet<>();
@@ -89,6 +89,7 @@ public class PlaylistService {
             playList.getPlaylistTracks().addAll(originalList);
             playList.setNrOfTracks(originalList.size());
             playlistRepository.save(playList);*/
+
             return added;
 
         }

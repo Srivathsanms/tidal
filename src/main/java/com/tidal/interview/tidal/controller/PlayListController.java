@@ -1,6 +1,7 @@
 package com.tidal.interview.tidal.controller;
 
 
+import com.tidal.interview.tidal.data.PlayListTrackDto;
 import com.tidal.interview.tidal.data.Track;
 import com.tidal.interview.tidal.services.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,8 @@ public class PlayListController {
     }
 
     @PostMapping(value = "/remove/{uuid}", produces = {APPLICATION_JSON_VALUE},consumes = {APPLICATION_JSON_VALUE})
-    public void removePlayList(@PathVariable("uuid") String uuid, @RequestBody List<Integer> indexes) {
-        List<Integer> indixes = new LinkedList<>();
-        indixes.add(1);
-        indixes.add(2);
-        service.removeTracks(uuid, indexes);
+    public List <PlayListTrackDto> removePlayList(@PathVariable("uuid") String uuid, @RequestBody List<Integer> indexes) {
+        return service.removeTracks(uuid, indexes);
     }
 
     private List<Track> getTracks() {

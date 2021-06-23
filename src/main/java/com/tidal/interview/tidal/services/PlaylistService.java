@@ -1,5 +1,6 @@
 package com.tidal.interview.tidal.services;
 
+import com.tidal.interview.tidal.data.PlayListTrackDto;
 import com.tidal.interview.tidal.data.Playlist;
 import com.tidal.interview.tidal.data.PlaylistTrack;
 import com.tidal.interview.tidal.data.Track;
@@ -122,11 +123,11 @@ public class PlaylistService {
      * @throws PlaylistException
      */
     @Transactional
-	public List<PlaylistTrack> removeTracks(String uuid, List<Integer> indexes) throws PlaylistException {
+    public List<PlayListTrackDto> removeTracks(String uuid, List<Integer> indexes) throws PlaylistException {
 
 		try {
 
-
+		    List<PlayListTrackDto> playListsAfterRemoval = new LinkedList <>();
         Playlist playList = playlistRepository.findById(uuid).get();
         List<PlaylistTrack> removePlaylist = new ArrayList<>(playList.getPlaylistTracks());
         Collections.sort(removePlaylist);
@@ -136,9 +137,10 @@ public class PlaylistService {
             System.out.println("Index Removed :::" + i);
         }
         setPlaylistTracks(playList,removePlaylist);
+            getPlayListAfterRemoval(playListsAfterRemoval, removePlaylist);
 
         System.out.println("Remove PlayList ::::" + removePlaylist);
-		return removePlaylist;
+            return playListsAfterRemoval;
 	}catch (PlaylistException pe) {
             throw new PlaylistException(CustomErrors.NO_MORE_ADDITION_OF_TRACKS_ALLOWED);
         }
@@ -151,6 +153,17 @@ public class PlaylistService {
             e.printStackTrace();
             throw new PlaylistException(CustomErrors.GENERIC_ERROR);
         }
+    }
+    private void getPlayListAfterRemoval(List < PlayListTrackDto > playListsAfterRemoval, List < PlaylistTrack > removePlaylist) {
+        removePlaylist.forEach(playlistTrackAfterRemoval -> {
+            PlayListTrackDto playListTrackDto = new PlayListTrackDto();
+            playListTrackDto.setId(playlistTrackAfterRemoval.getId());
+            playListTrackDto.setDateAdded(playlistTrackAfterRemoval.getDateAdded());
+            playListTrackDto.setPlaylistId(playlistTrackAfterRemoval.getPlaylistId());
+            playListTrackDto.setTrackId(playlistTrackAfterRemoval.getTrackId());
+            playListTrackDto.setTrackIndex(playlistTrackAfterRemoval.getTrackIndex());
+            playListsAfterRemoval.add(playListTrackDto);
+        });
     }
     /*private boolean validateIndexes(int toIndex, int length) {
         return toIndex >= 0 && toIndex <= length;

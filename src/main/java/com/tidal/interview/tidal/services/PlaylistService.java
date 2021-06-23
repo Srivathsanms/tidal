@@ -3,6 +3,7 @@ package com.tidal.interview.tidal.services;
 import com.tidal.interview.tidal.data.Playlist;
 import com.tidal.interview.tidal.data.PlaylistTrack;
 import com.tidal.interview.tidal.data.Track;
+import com.tidal.interview.tidal.exception.CustomErrors;
 import com.tidal.interview.tidal.exception.PlaylistException;
 import com.tidal.interview.tidal.interfaces.PlaylistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class PlaylistService {
 
             //We do not allow > 500 tracks in new playlists
             if (playList.getNrOfTracks() + tracksToAdd.size() > 500) {
-                throw new PlaylistException("Playlist cannot have more than 500 tracks");
+                throw new PlaylistException(CustomErrors.NO_MORE_ADDITION_OF_TRACKS_ALLOWED);
             }
 
             // The index is out of bounds, put it in the end of the list.
@@ -81,24 +82,25 @@ public class PlaylistService {
                 toIndex++;
             }
 //
-            setIndexesOnPlayListTrack(originalList);
+           // setIndexesOnPlayListTrack(originalList);
+            setPlaylistTracks(playList,originalList);
 
-            playList.getPlaylistTracks().clear();
+            /*playList.getPlaylistTracks().clear();
             playList.getPlaylistTracks().addAll(originalList);
             playList.setNrOfTracks(originalList.size());
-            playlistRepository.save(playList);
+            playlistRepository.save(playList);*/
             return added;
 
         }
         //catching exception
         catch(NoSuchElementException nseException) {
             nseException.printStackTrace();
-            throw new PlaylistException("Playlist does not exists");
+            throw new PlaylistException(CustomErrors.PLAYLIST_NOT_FOUND);
         }
 
         catch (Exception e) {
             e.printStackTrace();
-            throw new PlaylistException("Generic error");
+            throw new PlaylistException(CustomErrors.GENERIC_ERROR);
         }
     }
 

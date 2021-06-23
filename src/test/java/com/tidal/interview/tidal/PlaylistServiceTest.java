@@ -39,7 +39,7 @@ public class PlaylistServiceTest {
 	public void testAddTracksSuccess() {
 
 		Mockito.when(playlistRepository.findById(anyString())).thenReturn(Optional.of(new Playlist()));
-		List<PlaylistTrack> playlistTracks = playlistService.addTracks(UUID.randomUUID().toString(), getTracks(), 5);
+		List<PlayListTrackDto> playlistTracks = playlistService.addTracks(UUID.randomUUID().toString(), getTracks(), 5);
 		assertTrue(playlistTracks.size() > 0);
 	}
 

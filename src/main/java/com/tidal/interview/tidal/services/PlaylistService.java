@@ -14,6 +14,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class PlaylistService {
@@ -25,9 +27,10 @@ public class PlaylistService {
     EntityManager entityManager;
     /**
      * Add tracks to the index
+     * @return
      */
     @Transactional
-    public List<PlaylistTrack> addTracks(String uuid, List<Track> tracksToAdd, int toIndex) throws PlaylistException {
+    public List<PlayListTrackDto> addTracks(String uuid, List<Track> tracksToAdd, int toIndex) throws PlaylistException {
 
         try {
 
@@ -58,17 +61,10 @@ public class PlaylistService {
 
             Collections.sort(originalList);
 
-            List<PlaylistTrack> added = new ArrayList<PlaylistTrack>(tracksToAdd.size());
-            Set<Track> tracksToAddFinal = new HashSet<>();
-            List<Integer> x = new LinkedList<>();
-            for(PlaylistTrack t : originalList){
-                x.add(t.getTrackId());
-            }
-            for (Track track : tracksToAdd) {
-                if (!(x.contains(track.getTrackId()))) {
-                    tracksToAddFinal.add(track);
-                }
-            }
+            List<PlayListTrackDto> afterAdding = new LinkedList<>();
+            Set<Track> tracksToAddFinal;
+            List<Integer> checkDuplicates = originalList.stream().map(PlaylistTrack::getTrackId).collect(Collectors.toCollection(LinkedList::new));
+            tracksToAddFinal = tracksToAdd.stream().filter(track -> !(checkDuplicates.contains(track.getTrackId()))).collect(Collectors.toSet());
 
             for(Track finalTracks : tracksToAddFinal){
                 PlaylistTrack playlistTrack = new PlaylistTrack();
@@ -76,22 +72,15 @@ public class PlaylistService {
                 playlistTrack.setPlaylist(playList);
                 playlistTrack.setDateAdded(new Date());
                 playlistTrack.setTrackId(finalTracks.getTrackId());
-                //TODO: Not required duration can be fetched from TRACK table using trackID
                 playList.setDuration(addTrackDurationToPlaylist(playList, finalTracks));
                 originalList.add(toIndex, playlistTrack);
-                added.add(playlistTrack);
                 toIndex++;
             }
-//
-           // setIndexesOnPlayListTrack(originalList);
+
             setPlaylistTracks(playList,originalList);
+            getPlayListAfterRemoval(afterAdding,originalList);
 
-            /*playList.getPlaylistTracks().clear();
-            playList.getPlaylistTracks().addAll(originalList);
-            playList.setNrOfTracks(originalList.size());
-            playlistRepository.save(playList);*/
-
-            return added;
+            return afterAdding;
 
         }catch (PlaylistException pe) {
             throw new PlaylistException(CustomErrors.NO_MORE_ADDITION_OF_TRACKS_ALLOWED);
@@ -107,12 +96,6 @@ public class PlaylistService {
         }
     }
 
-    private void setIndexesOnPlayListTrack(List<PlaylistTrack> originalList) {
-        int i = 0;
-        for (PlaylistTrack track : originalList) {
-            track.setTrackIndex(i++);
-        }
-    }
 
     /**
      * Remove the tracks from the playlist located at the sent indexes
@@ -132,11 +115,8 @@ public class PlaylistService {
         List<PlaylistTrack> removePlaylist = new ArrayList<>(playList.getPlaylistTracks());
         Collections.sort(removePlaylist);
 
-        for(int i : indexes) {
-            removePlaylist.removeIf(track -> i == track.getTrackIndex());
-            System.out.println("Index Removed :::" + i);
-        }
-        setPlaylistTracks(playList,removePlaylist);
+            indexes.stream().mapToInt(i -> i).<Predicate<? super PlaylistTrack>>mapToObj(i -> track -> i == track.getTrackIndex()).forEach(removePlaylist::removeIf);
+            setPlaylistTracks(playList,removePlaylist);
             getPlayListAfterRemoval(playListsAfterRemoval, removePlaylist);
 
         System.out.println("Remove PlayList ::::" + removePlaylist);

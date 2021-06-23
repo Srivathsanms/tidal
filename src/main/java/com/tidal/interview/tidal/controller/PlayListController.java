@@ -5,12 +5,10 @@ import com.tidal.interview.tidal.data.PlayListTrackDto;
 import com.tidal.interview.tidal.data.Track;
 import com.tidal.interview.tidal.services.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -30,10 +28,8 @@ public class PlayListController {
 
     //TODO: should be POST call???
     @PostMapping(value = "/add/{uuid}/index/{index}", produces = {APPLICATION_JSON_VALUE})
-    public ResponseEntity<String> addPlayList(@PathVariable("uuid") String uuid, @PathVariable("index") int index, @RequestBody List<Track> trackList) {
-        /*List<Track> trackList = getTracks();*/
-        service.addTracks(uuid, trackList, index);
-        return new ResponseEntity<>("Tracks Added", OK);
+    public List<PlayListTrackDto> addPlayList(@PathVariable("uuid") String uuid, @PathVariable("index") int index, @RequestBody List<Track> trackList) {
+        return service.addTracks(uuid, trackList, index);
     }
 
     @PostMapping(value = "/remove/{uuid}", produces = {APPLICATION_JSON_VALUE},consumes = {APPLICATION_JSON_VALUE})

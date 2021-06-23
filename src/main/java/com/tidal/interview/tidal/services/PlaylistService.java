@@ -34,7 +34,7 @@ public class PlaylistService {
 
             //We do not allow > 500 tracks in new playlists
             if (playList.getNrOfTracks() + tracksToAdd.size() > 500) {
-                throw new PlaylistException(CustomErrors.NO_MORE_ADDITION_OF_TRACKS_ALLOWED);
+                throw new PlaylistException();
             }
 
             // The index is out of bounds, put it in the end of the list.
@@ -92,8 +92,9 @@ public class PlaylistService {
 
             return added;
 
+        }catch (PlaylistException pe) {
+            throw new PlaylistException(CustomErrors.NO_MORE_ADDITION_OF_TRACKS_ALLOWED);
         }
-        //catching exception
         catch(NoSuchElementException nseException) {
             nseException.printStackTrace();
             throw new PlaylistException(CustomErrors.PLAYLIST_NOT_FOUND);
@@ -123,7 +124,9 @@ public class PlaylistService {
     @Transactional
 	public List<PlaylistTrack> removeTracks(String uuid, List<Integer> indexes) throws PlaylistException {
 
-		// TODO
+		try {
+
+
         Playlist playList = playlistRepository.findById(uuid).get();
         List<PlaylistTrack> removePlaylist = new ArrayList<>(playList.getPlaylistTracks());
         Collections.sort(removePlaylist);
@@ -136,8 +139,19 @@ public class PlaylistService {
 
         System.out.println("Remove PlayList ::::" + removePlaylist);
 		return removePlaylist;
-	}
+	}catch (PlaylistException pe) {
+            throw new PlaylistException(CustomErrors.NO_MORE_ADDITION_OF_TRACKS_ALLOWED);
+        }
+        catch(NoSuchElementException nseException) {
+            nseException.printStackTrace();
+            throw new PlaylistException(CustomErrors.PLAYLIST_NOT_FOUND);
+        }
 
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new PlaylistException(CustomErrors.GENERIC_ERROR);
+        }
+    }
     /*private boolean validateIndexes(int toIndex, int length) {
         return toIndex >= 0 && toIndex <= length;
     }*/

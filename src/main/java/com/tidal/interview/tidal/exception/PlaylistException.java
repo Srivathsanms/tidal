@@ -1,5 +1,8 @@
 package com.tidal.interview.tidal.exception;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class PlaylistException extends RuntimeException {
 
     private String messageCode;

@@ -1,6 +1,5 @@
 package com.tidal.interview.tidal.data;
 
-import sun.reflect.generics.tree.Tree;
 
 import javax.persistence.*;
 import java.util.*;
@@ -12,23 +11,16 @@ import java.util.*;
 @Entity
 @Table(name = "PLAYLIST")
 public class Playlist {
-/*
-    UUID VARCHAR(50) NOT NULL, // Done
-    Playlist_Name VARCHAR(50) NOT NULL,// Done
-    Number_of_Tracks INT(8) NOT NULL,//Done
-    Last_Updated_date DATE NOT NULL,//Done
-    Registered_date DATE NOT NULL,
-    Deleted NUMERIC (1) DEFAULT 0*/
+
     @Id
     @Column(name = "id")
     private String id;
     private String playlistName;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "playlistId", referencedColumnName = "id", updatable = false, insertable = false, nullable = false)
-    private Set<PlaylistTrack> playlistTracks = new TreeSet<PlaylistTrack>();
+    private Set<PlaylistTrack> playlistTracks = new TreeSet<>();
     private Date registeredDate;
     private Date lastUpdatedDate;
-    //Why are we using UUID it can be an normal ID
 
     private int nrOfTracks;
     private boolean deleted;
@@ -39,7 +31,7 @@ public class Playlist {
         Date d = new Date();
         this.registeredDate = d;
         this.lastUpdatedDate = d;
-        this.playlistTracks = new HashSet<PlaylistTrack>();
+        this.playlistTracks = new HashSet<>();
     }
 
     public Float getDuration() {

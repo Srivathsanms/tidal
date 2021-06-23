@@ -25,12 +25,14 @@ public class PlaylistService {
 
     @PersistenceContext
     EntityManager entityManager;
+
     /**
      * Add tracks to the index
+     *
      * @return
      */
     @Transactional
-    public List<PlayListTrackDto> addTracks(String uuid, List<Track> tracksToAdd, int toIndex) throws PlaylistException {
+    public List < PlayListTrackDto > addTracks(String uuid, List < Track > tracksToAdd, int toIndex) throws PlaylistException {
 
         try {
 
@@ -47,26 +49,21 @@ public class PlaylistService {
                 toIndex = size;
             }
 
-           /* //Dont think this validation is needed, Since -1 is allowed assuming that any negative value should be allowed and set in the last index position
-            if (!validateIndexes(toIndex, playList.getNrOfTracks())) {
-                return Collections.emptyList();
-            }*/
-
-            Set<PlaylistTrack> originalSet = playList.getPlaylistTracks();
-            List<PlaylistTrack> originalList;
+            Set < PlaylistTrack > originalSet = playList.getPlaylistTracks();
+            List < PlaylistTrack > originalList;
             if (originalSet == null || originalSet.isEmpty())
-                originalList = new LinkedList<PlaylistTrack>();
+                originalList = new LinkedList <>();
             else
-                originalList = new LinkedList<PlaylistTrack>(originalSet);
+                originalList = new LinkedList <>(originalSet);
 
             Collections.sort(originalList);
 
-            List<PlayListTrackDto> afterAdding = new LinkedList<>();
-            Set<Track> tracksToAddFinal;
-            List<Integer> checkDuplicates = originalList.stream().map(PlaylistTrack::getTrackId).collect(Collectors.toCollection(LinkedList::new));
+            List < PlayListTrackDto > afterAdding = new LinkedList <>();
+            Set < Track > tracksToAddFinal;
+            List < Integer > checkDuplicates = originalList.stream().map(PlaylistTrack::getTrackId).collect(Collectors.toCollection(LinkedList::new));
             tracksToAddFinal = tracksToAdd.stream().filter(track -> !(checkDuplicates.contains(track.getTrackId()))).collect(Collectors.toSet());
 
-            for(Track finalTracks : tracksToAddFinal){
+            for (Track finalTracks : tracksToAddFinal) {
                 PlaylistTrack playlistTrack = new PlaylistTrack();
                 playlistTrack.setPlaylistId(playList.getId());
                 playlistTrack.setPlaylist(playList);
@@ -77,20 +74,17 @@ public class PlaylistService {
                 toIndex++;
             }
 
-            setPlaylistTracks(playList,originalList);
-            getPlayListAfterRemoval(afterAdding,originalList);
+            setPlaylistTracks(playList, originalList);
+            getPlayListAfterRemoval(afterAdding, originalList);
 
             return afterAdding;
 
-        }catch (PlaylistException pe) {
+        } catch (PlaylistException pe) {
             throw new PlaylistException(CustomErrors.NO_MORE_ADDITION_OF_TRACKS_ALLOWED);
-        }
-        catch(NoSuchElementException nseException) {
+        } catch (NoSuchElementException nseException) {
             nseException.printStackTrace();
             throw new PlaylistException(CustomErrors.PLAYLIST_NOT_FOUND);
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new PlaylistException(CustomErrors.GENERIC_ERROR);
         }
@@ -100,40 +94,37 @@ public class PlaylistService {
     /**
      * Remove the tracks from the playlist located at the sent indexes
      *
-     * @param uuid identifies the playlist
+     * @param uuid    identifies the playlist
      * @param indexes indexes of the tracks in the playlist that need to be removed
      * @return the tracks in the playlist after the removal
      * @throws PlaylistException
      */
     @Transactional
-    public List<PlayListTrackDto> removeTracks(String uuid, List<Integer> indexes) throws PlaylistException {
+    public List < PlayListTrackDto > removeTracks(String uuid, List < Integer > indexes) throws PlaylistException {
 
-		try {
+        try {
 
-		    List<PlayListTrackDto> playListsAfterRemoval = new LinkedList <>();
-        Playlist playList = playlistRepository.findById(uuid).get();
-        List<PlaylistTrack> removePlaylist = new ArrayList<>(playList.getPlaylistTracks());
-        Collections.sort(removePlaylist);
+            List < PlayListTrackDto > playListsAfterRemoval = new LinkedList <>();
+            Playlist playList = playlistRepository.findById(uuid).get();
+            List < PlaylistTrack > removePlaylist = new ArrayList <>(playList.getPlaylistTracks());
+            Collections.sort(removePlaylist);
 
-            indexes.stream().mapToInt(i -> i).<Predicate<? super PlaylistTrack>>mapToObj(i -> track -> i == track.getTrackIndex()).forEach(removePlaylist::removeIf);
-            setPlaylistTracks(playList,removePlaylist);
+            indexes.stream().mapToInt(i -> i). < Predicate < ? super PlaylistTrack > >mapToObj(i -> track -> i == track.getTrackIndex()).forEach(removePlaylist::removeIf);
+            setPlaylistTracks(playList, removePlaylist);
             getPlayListAfterRemoval(playListsAfterRemoval, removePlaylist);
 
-        System.out.println("Remove PlayList ::::" + removePlaylist);
             return playListsAfterRemoval;
-	}catch (PlaylistException pe) {
+        } catch (PlaylistException pe) {
             throw new PlaylistException(CustomErrors.NO_MORE_ADDITION_OF_TRACKS_ALLOWED);
-        }
-        catch(NoSuchElementException nseException) {
+        } catch (NoSuchElementException nseException) {
             nseException.printStackTrace();
             throw new PlaylistException(CustomErrors.PLAYLIST_NOT_FOUND);
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new PlaylistException(CustomErrors.GENERIC_ERROR);
         }
     }
+
     private void getPlayListAfterRemoval(List < PlayListTrackDto > playListsAfterRemoval, List < PlaylistTrack > removePlaylist) {
         removePlaylist.forEach(playlistTrackAfterRemoval -> {
             PlayListTrackDto playListTrackDto = new PlayListTrackDto();
@@ -145,16 +136,13 @@ public class PlaylistService {
             playListsAfterRemoval.add(playListTrackDto);
         });
     }
-    /*private boolean validateIndexes(int toIndex, int length) {
-        return toIndex >= 0 && toIndex <= length;
-    }*/
 
     private float addTrackDurationToPlaylist(Playlist playList, Track track) {
         return (track != null ? track.getDuration() : 0)
                 + (playList != null && playList.getDuration() != null ? playList.getDuration() : 0);
     }
 
-    private void setPlaylistTracks(Playlist playList, List<PlaylistTrack> original) {
+    private void setPlaylistTracks(Playlist playList, List < PlaylistTrack > original) {
 
         int i = 0;
         for (PlaylistTrack track : original) {

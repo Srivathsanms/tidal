@@ -1,9 +1,9 @@
 package com.tidal.interview.tidal.data;
 
 import javax.persistence.*;
-import java.util.Comparator;
+
 import java.util.Date;
-import java.util.Objects;
+
 
 @Entity
 @Table(name = "PLAYLIST_AND_TRACK")
@@ -38,10 +38,6 @@ public class PlaylistTrack implements Comparable <PlaylistTrack> {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        id = id;
     }
 
 

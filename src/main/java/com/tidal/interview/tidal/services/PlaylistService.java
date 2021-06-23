@@ -121,8 +121,6 @@ public class PlaylistService {
             getPlayListAfterRemoval(playListsAfterRemoval, removePlaylist);
 
             return playListsAfterRemoval;
-        } catch (PlaylistException pe) {
-            throw new PlaylistException(CustomErrors.NO_MORE_ADDITION_OF_TRACKS_ALLOWED);
         } catch (NoSuchElementException nseException) {
             nseException.printStackTrace();
             throw new PlaylistException(CustomErrors.PLAYLIST_NOT_FOUND);
